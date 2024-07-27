@@ -48,7 +48,7 @@ function WeatherCard({cityName, lat, lon}) {
   useEffect(() => {
     console.log('cityName', cityName);
     console.log('position', lat, lon);
-    // getWeatherFromAPI(latitude, longitude);
+    getWeatherFromAPI(lat, lon);
   }, []);
 
   return (
@@ -57,6 +57,9 @@ function WeatherCard({cityName, lat, lon}) {
       <Text>City: {cityName}</Text>
       <Text>Lat: {lat.toString()}</Text>
       <Text>Lon: {lon.toString()}</Text>
+      <Text>Lat: {weather.id}</Text>
+      <Text>Lat: {weather.highestTemp}</Text>
+      <Text>Lat: {weather.lowestTemp}</Text>
     </View>
   );
 }
