@@ -11,7 +11,7 @@ import {
 // GPS
 import Geolocation from '@react-native-community/geolocation';
 
-//Geolocation.getCurrentPosition(info => console.log(info));
+Geolocation.getCurrentPosition(info => console.log('current position:', info));
 
 // Local storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -112,8 +112,9 @@ function WeatherForecastPage({navigation}) {
         `http://api.openweathermap.org/geo/1.0/direct?q=${inputLocation.trim()}&appid=${APIKEY}`,
       );
       const json = await response.json();
-      // console.log('lat,lon: ', json[0].lat, json[0].lon);
-      // console.log('name: ', json[0].name);
+      console.log('json', json);
+      console.log('lat,lon: ', json[0].lat, json[0].lon);
+      console.log('name: ', json[0].name);
 
       if (json.cod === '404') {
         Alert.alert('Location Not Found', 'Please enter a valid location.');
