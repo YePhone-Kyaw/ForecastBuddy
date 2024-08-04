@@ -1,17 +1,15 @@
 import React, {useMemo, useState} from 'react';
-import {StyleSheet, View, Button, Text} from 'react-native';
+import {StyleSheet, View, Button, Text, ImageBackground} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import RadioGroup from 'react-native-radio-buttons-group';
+import backgroundImage from '../images/forecastBuddyBG.png';
 
 // Notifee
-import notifee, {
-  TimestampTrigger,
-  TriggerType,
-  RepeatFrequency,
-} from '@notifee/react-native';
+import notifee, {TriggerType, RepeatFrequency} from '@notifee/react-native';
 
 function SettingsPage() {
   const [date, setDate] = useState(new Date());
+  const [selectedId, setSelectedId] = useState('1');
 
   const radioButtons = useMemo(
     () => [
@@ -28,8 +26,6 @@ function SettingsPage() {
     ],
     [],
   );
-
-  const [selectedId, setSelectedId] = useState();
 
   const getSelectedValue = () => {
     const selectedButton = radioButtons.find(
@@ -53,7 +49,6 @@ function SettingsPage() {
     );
   };
 
-  // Notifee
   async function onCreateTriggerNotification(
     hours,
     minutes,
@@ -61,23 +56,19 @@ function SettingsPage() {
     body,
     frequency,
   ) {
-    const date = new Date(Date.now());
-    date.setHours(hours);
-    date.setMinutes(minutes);
-
-    console.log('Trigger Time:', `${hours}:${minutes}`);
+    const triggerDate = new Date(Date.now());
+    triggerDate.setHours(hours);
+    triggerDate.setMinutes(minutes);
 
     const repeatFrequency =
       frequency === 'WEEKLY' ? RepeatFrequency.WEEKLY : RepeatFrequency.DAILY;
 
-    // Create a time-based trigger
     const trigger = {
       type: TriggerType.TIMESTAMP,
-      timestamp: date.getTime(),
+      timestamp: triggerDate.getTime(),
       repeatFrequency: repeatFrequency,
     };
 
-    // Create a trigger notification
     await notifee.createTriggerNotification(
       {
         title: title,
@@ -91,20 +82,30 @@ function SettingsPage() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Notification Settings</Text>
-      <DatePicker mode="time" date={date} onDateChange={setDate} />
-      <RadioGroup
-        radioButtons={radioButtons}
-        onPress={setSelectedId}
-        selectedId={selectedId}
-      />
-      <Button
-        title="Set notification"
-        onPress={onClickSetNotification}
-        style={styles.customBtn}
-      />
-    </View>
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <Text style={styles.titleText}>Notification Settings</Text>
+        <DatePicker
+          style={styles.datePicker}
+          mode="time"
+          date={date}
+          onDateChange={setDate}
+        />
+        <RadioGroup
+          radioButtons={radioButtons}
+          onPress={setSelectedId}
+          selectedId={selectedId}
+          containerStyle={styles.radioGroup}
+          radioButtonStyle={styles.radioButton}
+          labelStyle={styles.radioButtonLabel}
+        />
+        <Button
+          title="Set notification"
+          onPress={onClickSetNotification}
+          style={styles.customBtn}
+        />
+      </View>
+    </ImageBackground>
   );
 }
 
@@ -117,8 +118,35 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30,
   },
+  datePicker: {
+    marginTop: 30,
+    marginBottom: 30,
+  },
+
   customBtn: {
     marginTop: 20,
+  },
+  radioGroup: {
+    flexDirection: 'row',
+    marginVertical: 20,
+  },
+  radioButton: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#007BFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  radioButtonLabel: {
+    fontSize: 16,
+    color: '#333',
+  },
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 
