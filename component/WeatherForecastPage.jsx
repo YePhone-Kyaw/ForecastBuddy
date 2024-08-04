@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import {
+  StyleSheet,
   View,
   Text,
   TextInput,
@@ -193,14 +194,7 @@ function WeatherForecastPage({navigation}) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <TextInput
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          width: '100%',
-          marginBottom: 10,
-          paddingHorizontal: 10,
-        }}
+        style={styles.textBox}
         placeholder="Enter location"
         value={inputLocation}
         onChangeText={setInputLocation}
@@ -236,5 +230,28 @@ function WeatherForecastPage({navigation}) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 30,
+  },
+  titleText: {
+    color: 'darkblue',
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  customText: {
+    fontSize: 20,
+  },
+  textBox: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+});
 
 export default WeatherForecastPage;

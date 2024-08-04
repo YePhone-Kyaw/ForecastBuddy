@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 //.env
 // import Config from 'react-native-config';
@@ -19,6 +19,31 @@ function WeatherCard({cityName, lat, lon}) {
 
   const [loading, setLoading] = useState(false);
 
+  // Get weather description from weather ID
+  const getWeatherDescription = id => {
+    let weatherDescription = '';
+
+    if (id >= 200 && id < 300) {
+      weatherDescription = 'Thunderstorm';
+    } else if (id >= 300 && id < 400) {
+      weatherDescription = 'Drizzle';
+    } else if (id >= 500 && id < 600) {
+      weatherDescription = 'Rain';
+    } else if (id >= 600 && id < 700) {
+      weatherDescription = 'Snow';
+    } else if (id >= 700 && id < 800) {
+      weatherDescription = 'Atmosphere';
+    } else if (id === 800) {
+      weatherDescription = 'Clear';
+    } else if (id > 800) {
+      weatherDescription = 'Clouds';
+    } else {
+      weatherDescription = 'Unknown';
+    }
+
+    return weatherDescription;
+  };
+
   // Get weather data from OpenWeather API
   const getWeatherFromAPI = async (lat, lon) => {
     console.log('APIKEY', APIKEY);
@@ -31,9 +56,9 @@ function WeatherCard({cityName, lat, lon}) {
       const jsonWeather = await response.json();
       // console.log(jsonWeather);
       const weather = {
-        id: jsonWeather.weather[0].id,
-        highestTemp: jsonWeather.main.temp_max,
-        lowestTemp: jsonWeather.main.temp_min,
+        id: getWeatherDescription(jsonWeather.weather[0].id),
+        highestTemp: parseInt(jsonWeather.main.temp_max - 273.15),
+        lowestTemp: parseInt(jsonWeather.main.temp_min - 273.15),
       };
       // console.log('Weather:', weather);
       setWeather(weather);
@@ -52,16 +77,29 @@ function WeatherCard({cityName, lat, lon}) {
   }, []);
 
   return (
-    <View>
-      <Text>WeatherCard</Text>
-      <Text>City: {cityName}</Text>
-      <Text>Lat: {lat.toString()}</Text>
-      <Text>Lon: {lon.toString()}</Text>
-      <Text>Lat: {weather.id}</Text>
-      <Text>Lat: {weather.highestTemp}</Text>
-      <Text>Lat: {weather.lowestTemp}</Text>
+    <View style={styles.container}>
+      <Text style={styles.titleText}>{cityName}</Text>
+      {/* <Text>Lat: {lat.toString()}</Text>
+      <Text>Lon: {lon.toString()}</Text> */}
+      <Text style={styles.customText}>Main Wheather: {weather.id}</Text>
+      <Text style={styles.customText}>Highest: {weather.highestTemp}</Text>
+      <Text style={styles.customText}>Lowest: {weather.lowestTemp}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 30,
+  },
+  titleText: {
+    color: 'darkblue',
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  customText: {
+    fontSize: 20,
+  },
+});
 
 export default WeatherCard;
